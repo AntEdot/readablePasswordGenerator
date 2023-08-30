@@ -1,10 +1,11 @@
 import java.io.File;  // Import the File class
 import java.io.FileNotFoundException;  // Import this class to handle errors
 import java.util.Scanner; // Import the Scanner class to read text files
+import java.nio.file.*;
 
 import java.util.Random; 
 
-public class wordListReader{
+public class WordListReader{
 	String fileName;
 	String[] banned;
 	String[] rm;
@@ -12,7 +13,7 @@ public class wordListReader{
 	File wordList;
 	Scanner reader;
 
-	public wordListReader(String fileName){
+	public WordListReader(String fileName){
 		this.fileName = fileName;
 	}
 	
@@ -45,7 +46,6 @@ public class wordListReader{
 		StringBuilder sb = new StringBuilder(data);
 		int c = sb.indexOf(cut);
 		while(c > -1){
-			//System.out.println(c + data + cut);
 			sb.delete(c, c + cut.length());
 			c = sb.indexOf(cut);
 		}
@@ -97,6 +97,7 @@ public class wordListReader{
 	public String fixList(){
 		openFile();
 		StringBuilder sb = new StringBuilder();
+		StringBuilder sb1 = new StringBuilder();
 		while (reader.hasNextLine()) {
 			String s = reader.nextLine();
 			if(banned != null){
@@ -114,11 +115,13 @@ public class wordListReader{
 					}
 					sb.append(s);
 					sb.append("\r\n");
+					sb1.append(s);
+					sb1.append("\",\r\n\"");
 				}
 			}
 		}
 		closeFile();
-		return sb.toString();
+		return sb1.toString();
 	}
 
 	private int countLines(String str){
@@ -129,11 +132,22 @@ public class wordListReader{
 	public String getRandomWord(){
 		Random rand = new Random();
 		String list = fixList();
+		writeToFile(list, "words.txt");
+
+
 		String[] lines = list.split("\r\n|\r|\n");
 		return lines[rand.nextInt(lines.length)];
 	}
 
-	private void writeToFile(String fileName){
-
+	private void writeToFile(String data, String fileName){
+		try {
+			Path path = Paths.get(fileName);
+			byte[] strToBytes = data.getBytes();
+		
+			Files.write(path, strToBytes);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
 	}
 }

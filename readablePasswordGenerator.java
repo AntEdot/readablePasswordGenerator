@@ -7,7 +7,7 @@ class readablePasswordGenerator{
 		String banned[] = {"å", "ä", "ö", "é", "/"};
 		String rm[] = {"en ", "ett "};
 
-		wordListReader w = new wordListReader("wordList.txt");
+		WordListReader w = new WordListReader("wordList.txt");
 		w.addBannedCondition(banned);
 		w.addRemoveCondition(rm);
 
@@ -18,7 +18,7 @@ class readablePasswordGenerator{
 		System.out.println();
 	}
 
-	public static String genPass(wordListReader w){
+	public static String genPass(WordListReader w){
 		Random rand = new Random();
 		String r = w.getRandomWord() + w.getRandomWord() + rand.nextInt(99);
 		while(r.length() < 20){
